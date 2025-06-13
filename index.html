@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Novelty ID Submission</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 10px;
+    }
+    h2 {
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      display: block;
+      padding: 12px 20px;
+      margin: 30px auto 0;
+      background-color: #007aff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #005bb5;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Novelty ID Submission Form</h2>
+
+  <form id="noveltyForm">
+    <label for="fullName">Full Name:</label>
+    <input type="text" id="fullName" required />
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" required />
+
+    <label for="dob">Date of Birth:</label>
+    <input type="date" id="dob" required />
+
+    <label for="height">Height:</label>
+    <input type="text" id="height" placeholder="e.g., 5'8&quot;" required />
+
+    <label for="weight">Weight:</label>
+    <input type="text" id="weight" placeholder="e.g., 160 lbs" required />
+
+    <label for="address">Full Address:</label>
+    <textarea id="address" rows="3" required></textarea>
+
+    <label for="notes">Additional Notes:</label>
+    <textarea id="notes" rows="4"></textarea>
+
+    <label for="photo">Upload Photo (JPEG or PNG):</label>
+    <input type="file" id="photo" accept="image/png, image/jpeg" />
+
+    <button type="submit">Download PDF</button>
+  </form>
+
+  <script>
+    const { jsPDF } = window.jspdf;
+
+    document.getElementById("noveltyForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const fullName = document.getElementById("fullName").value;
+      const email = document.getElementById("email").value;
+      const dob = document.getElementById("dob").value;
+      const height = document.getElementById("height").value;
+      const weight = document.getElementById("weight").value;
+      const address = document.getElementById("address").value;
+      const notes = document.getElementById("notes").value;
+      const photoInput = document.getElementById("photo");
+
+      const doc = new jsPDF();
+      doc.setFontSize(18);
+      doc.text("Novelty ID Submission", 20, 20);
+
+      doc.setFontSize(12);
+      doc.text(`Full Name: ${fullName}`, 20, 40);
+      doc.text(`Email: ${email}`, 20, 50);
+      doc.text(`DOB: ${dob}`, 20, 60);
+      doc.text(`Height: ${height}`, 20, 70);
+      doc.text(`Weight: ${weight}`, 20, 80);
+      doc.text("Address:", 20, 90);
+      doc.text(address, 30, 98, { maxWidth: 160 });
+      doc.text("Notes:", 20, 120);
+      doc.text(notes, 30, 128, { maxWidth: 160 });
+
+      // Optional: Add photo to PDF
+      if (photoInput.files.length > 0) {
+        const reader = new FileReader();
+        reader.onload = function (event) {
+          const imageData = event.target.result;
+          doc.addImage(imageData, 'JPEG', 20, 150, 60, 60); // x, y, width, height
+          doc.save("Novelty_ID_Form.pdf");
+        };
+        reader.readAsDataURL(photoInput.files[0]);
+      } else {
+        doc.save("Novelty_ID_Form.pdf");
+      }
+    });
+  </script>
+</body>
+</html>
